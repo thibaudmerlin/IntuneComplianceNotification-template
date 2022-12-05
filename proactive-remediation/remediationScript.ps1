@@ -3,9 +3,9 @@
 $client = "Company"
 $logPath = "$ENV:ProgramData\$client\Logs"
 $logFile = "$logPath\PwNotificationRemediation.log"
-$user = whoami /upn
+$device = hostname
 $errorOccurred = $null
-$funcUri = 'https://{putURIhere}'
+$funcUri = 'https://kyoscompliancecheck.azurewebsites.net/api/comp-notif-qry?code=ywVBor5v_z5s6PRAh-zZxm0auuZ-0rqTG5DGqgKY7xJqAzFupFsODA=='
 $UserContext = [Security.Principal.WindowsIdentity]::GetCurrent()
 $WindirTemp = Join-Path $Env:Windir -Childpath "Temp"
 

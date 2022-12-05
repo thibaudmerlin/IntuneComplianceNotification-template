@@ -3,18 +3,18 @@
         "notificationPeriod": "15",
         "texts": [
           {
-            "headerText": "Test Company Ltd",
-            "titleText": "Password Expiration Notice",
-            "bodyText1start": "Your password is about to expire in : ",
+            "headerText": "Kyos SA",
+            "titleText": "Device Compliance Status",
+            "bodyText1start": "Your device is not compliant",
             "bodyText1end": "day(s)",
             "bodyText1Altstart": "Your password is expired since : ",
             "bodyText1Altend": "day(s)",
             "bodyText2": "Please change it asap, if you're not able to change it, please contact the support.",
             "bodyText3": "Your password last change : ",
             "attributionText": "Information",
-            "actionButtonContent": "Change password",
-	          "dismissButtonContent": "Remind me",
-            "actionUrl": "https://account.activedirectory.windowsazure.com/ChangePassword.aspx"
+            "actionButtonContent": "Company Portal",
+	          "dismissButtonContent": "Dismiss",
+            "actionUrl": "shell:AppsFolder\\Microsoft.CompanyPortal_8wekyb3d8bbwe!App"
           }
         ],
         "images": [

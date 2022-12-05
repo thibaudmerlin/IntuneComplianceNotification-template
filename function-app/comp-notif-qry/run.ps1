@@ -147,9 +147,10 @@ if ($device) {
     }
     $result = [PSCustomObject]@{
         hash                        = $hashCheck
-        managedDevice            = $managedDevice | Where-Object { $_ }
-        deviceId                 = $deviceId
-
+        deviceName            = $managedDevice.deviceName
+        lastSyncDateTime      = $managedDevice.lastSyncDateTime
+        complianceState          = $managedDevice.complianceState
+        complianceGracePeriodExpirationDateTime = $managedDevice.complianceGracePeriodExpirationDateTime
     }
 }
 else {

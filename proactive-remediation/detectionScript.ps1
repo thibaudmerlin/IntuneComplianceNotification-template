@@ -1,11 +1,11 @@
 #region Config
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$client = "Company"
+$client = "Kyos"
 $logPath = "$ENV:ProgramData\$client\Logs"
-$logFile = "$logPath\PwNotificationDetection.log"
-$user = whoami /upn
+$logFile = "$logPath\ComplianceCheck.log"
+$device = hostname
 $errorOccurred = $null
-$funcUri = 'https://{putURIhere}'
+$funcUri = 'https://kyoscompliancecheck.azurewebsites.net/api/comp-notif-qry?code=ywVBor5v_z5s6PRAh-zZxm0auuZ-0rqTG5DGqgKY7xJqAzFupFsODA=='
 $UserContext = [Security.Principal.WindowsIdentity]::GetCurrent()
 $WindirTemp = Join-Path $Env:Windir -Childpath "Temp"
  
@@ -14,6 +14,7 @@ Switch ($UserContext) {
     { $PSItem.Name -NotMatch    "System"    } { Write-Output "Not running System" }
     Default { Write-Output "Could not translate Usercontext" }
 }
+Write-Host $device
 #endregion
 #region logging
 if (!(Test-Path -Path $logPath)) {
@@ -26,27 +27,20 @@ Start-Transcript -Path $logFile -Force
 #region Get parameters and user pw timespan
     $fParams = @{
         Method      = 'Get'
-        Uri         = "$funcUri&user=$user"
+        Uri         = "$funcUri&device=$device"
         ContentType = 'Application/Json'
     }
     $json = Invoke-RestMethod @fParams
 #endregion
 #region compare timespan
-    $TimeSpan = $json.TimeSpan
-    $NotifPeriod = $json.notificationPeriod
-    If (($TimeSpan -le $NotifPeriod) -and ($TimeSpan -ge 0)) {
-        Write-Output "Password Expires after $TimeSpan days"
-        Stop-Transcript
-        Exit 1
-    }
-    elseif ($TimeSpan -le 0) {
-        $TimeSpan = $TimeSpan -replace "-",""
-        Write-Output "Password Expired since $TimeSpan days"
+    $complianceState = $json.complianceState
+    If ($complianceState -ne "compliant") {
+        Write-Output "The device is not compliant : $complianceState"
         Stop-Transcript
         Exit 1
     }
     else {
-        Write-Output "Password not expires since more than "
+        Write-Output "The device is compliant"
         Stop-Transcript
         Exit 0
     }
