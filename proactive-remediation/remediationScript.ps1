@@ -98,13 +98,14 @@ Start-Transcript -Path $logFile -Force
     $json = Invoke-RestMethod @fParams
     #endregion
     #region parse json
-    $lastpasswordChange = $json.lastpasswordChange
-    $timeSpan = $json.TimeSpan
-    $NotifPeriod = $json.notificationPeriod
-    $texts = $json.texts
-    $images = $json.images
-	If (($TimeSpan -gt $NotifPeriod)) {
-        Write-Output "Aborting Script, TimeSpan is greater than notification Period"
+    $complianceState = $json.complianceState
+    If ($complianceState -ne "compliant") {
+        Write-Output "The device is not compliant : $complianceState"
+        Stop-Transcript
+        Exit 1
+    }
+    else {
+        Write-Output "The device is compliant"
         Stop-Transcript
         Exit 1
     }

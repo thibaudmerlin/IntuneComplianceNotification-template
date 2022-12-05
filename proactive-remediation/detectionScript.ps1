@@ -32,7 +32,7 @@ Start-Transcript -Path $logFile -Force
     }
     $json = Invoke-RestMethod @fParams
 #endregion
-#region compare timespan
+#region check compliance with Intune attribute
     $complianceState = $json.complianceState
     If ($complianceState -ne "compliant") {
         Write-Output "The device is not compliant : $complianceState"
