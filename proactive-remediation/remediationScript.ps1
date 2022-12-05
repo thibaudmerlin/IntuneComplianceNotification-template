@@ -99,16 +99,12 @@ Start-Transcript -Path $logFile -Force
     #endregion
     #region parse json
     $complianceState = $json.complianceState
-    If ($complianceState -ne "compliant") {
-        Write-Output "The device is not compliant : $complianceState"
+    If ($complianceState -eq "compliant") {
+        Write-Output "The device is compliant : $complianceState"
         Stop-Transcript
         Exit 1
     }
-    else {
-        Write-Output "The device is compliant"
-        Stop-Transcript
-        Exit 1
-    }
+    
     #endregion
     #region check OS version
     $RunningOS = Get-CimInstance -Class Win32_OperatingSystem | Select-Object BuildNumber
@@ -146,6 +142,11 @@ Start-Transcript -Path $logFile -Force
     $LogoImage = $images.logoImg
     #endregion
 	
+	$syncIme = New-Object -ComObject Shell.Application
+    $syncIme.open("intunemanagementextension://syncapp")
+
+	$syncIme = New-Object -ComObject Shell.Application
+    $syncIme.open("intunemanagementextension://synccompliance")
     
 	$PSAppStatus = "True"
  

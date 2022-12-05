@@ -145,12 +145,19 @@ if ($device) {
         $managedDeviceQuery = "deviceManagement/managedDevices/{0}" -f $deviceId
         $managedDevice = (Get-JsonFromGraph -token $token -strQuery $managedDeviceQuery -ver v1.0)
     }
+    $aadDeviceQuery = "devices?`$filter=startswith(displayName,'{0}')&`$select=id" -f $device
+    $aadDeviceId = (Get-JsonFromGraph -token $token -strQuery $aadDeviceQuery -ver v1.0).id
+    $aadDeviceQuery
+    $aadDeviceId
+    if ($aadDeviceId) {
+        $managedAadDeviceQuery = "devices/{0}" -f $aadDeviceId
+        $managedAadDevice = (Get-JsonFromGraph -token $token -strQuery $managedAadDeviceQuery -ver v1.0)
+    }
     $result = [PSCustomObject]@{
         hash                        = $hashCheck
-        deviceName            = $managedDevice.deviceName
         lastSyncDateTime      = $managedDevice.lastSyncDateTime
         complianceState          = $managedDevice.complianceState
-        complianceGracePeriodExpirationDateTime = $managedDevice.complianceGracePeriodExpirationDateTime
+        isCompliant              = $managedAadDevice.isCompliant
     }
 }
 else {
