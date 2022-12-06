@@ -1,27 +1,22 @@
 {
-        "expirationPeriod": "90",
-        "notificationPeriod": "15",
         "texts": [
           {
-            "headerText": "Kyos SA",
-            "titleText": "Device Compliance Status",
-            "bodyText1start": "Your device is not compliant",
-            "bodyText1end": "day(s)",
-            "bodyText1Altstart": "Your password is expired since : ",
-            "bodyText1Altend": "day(s)",
-            "bodyText2": "Please change it asap, if you're not able to change it, please contact the support.",
-            "bodyText3": "Your password last change : ",
+            "headerText": "Kyos SA - Device compliance status",
+            "titleText": "",
+            "bodyText1": "Your device is not compliant, your access is blocked",
+            "bodyText2": "Last settings sync : ",
+            "bodyText3": "We're doing some sync processes on your device, Open the Company Portal -> This device -> Check Access",
             "attributionText": "Information",
             "actionButtonContent": "Company Portal",
 	          "dismissButtonContent": "Dismiss",
-            "actionUrl": "shell:AppsFolder\\Microsoft.CompanyPortal_8wekyb3d8bbwe!App"
+            "actionUrl": "companyportal:open"
           }
         ],
         "images": [
           {
-            "heroImgW10": "C:\\Windows\\Web\\Wallpaper\\Theme1\\img1.jpg",
-            "heroImgW11": "C:\\Windows\\Web\\Wallpaper\\Windows\\img19.jpg",
-            "logoImg": "https://www.kyos.ch/wp-content/uploads/2021/06/Kyos_Home_Shield.png"
+            "heroImgW10": "",
+            "heroImgW11": "",
+            "logoImg": "https://kyosintunepublic.blob.core.windows.net/img/01.kyos.logo.rouge.128px.icone.png"
           }
         ]
   }

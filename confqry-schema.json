@@ -5,32 +5,10 @@
 	"title": "Root", 
 	"type": "object",
 	"required": [
-		"expirationPeriod",
-		"notificationPeriod",
 		"texts",
 		"images"
 	],
 	"properties": {
-		"expirationPeriod": {
-			"$id": "#root/expirationPeriod", 
-			"title": "Expirationperiod", 
-			"type": "string",
-			"default": "",
-			"examples": [
-				"90"
-			],
-			"pattern": "^.*$"
-		},
-		"notificationPeriod": {
-			"$id": "#root/notificationPeriod", 
-			"title": "Notificationperiod", 
-			"type": "string",
-			"default": "",
-			"examples": [
-				"15"
-			],
-			"pattern": "^.*$"
-		},
 		"texts": {
 			"$id": "#root/texts", 
 			"title": "Texts", 
@@ -43,10 +21,7 @@
 				"required": [
 					"headerText",
 					"titleText",
-					"bodyText1start",
-					"bodyText1end",
-					"bodyText1Altstart",
-					"bodyText1Altend",
+					"bodyText1",
 					"bodyText2",
 					"bodyText3",
 					"attributionText",
@@ -75,43 +50,13 @@
 						],
 						"pattern": "^.*$"
 					},
-					"bodyText1start": {
-						"$id": "#root/texts/items/bodyText1start", 
-						"title": "Bodytext1start", 
+					"bodyText1": {
+						"$id": "#root/texts/items/bodyText1", 
+						"title": "Bodytext1", 
 						"type": "string",
 						"default": "",
 						"examples": [
 							"Your password is about to expire in : "
-						],
-						"pattern": "^.*$"
-					},
-					"bodyText1end": {
-						"$id": "#root/texts/items/bodyText1end", 
-						"title": "Bodytext1end", 
-						"type": "string",
-						"default": "",
-						"examples": [
-							"day(s)"
-						],
-						"pattern": "^.*$"
-					},
-					"bodyText1Altstart": {
-						"$id": "#root/texts/items/bodyText1Altstart", 
-						"title": "Bodytext1altstart", 
-						"type": "string",
-						"default": "",
-						"examples": [
-							"Your password is expired since : "
-						],
-						"pattern": "^.*$"
-					},
-					"bodyText1Altend": {
-						"$id": "#root/texts/items/bodyText1Altend", 
-						"title": "Bodytext1altend", 
-						"type": "string",
-						"default": "",
-						"examples": [
-							"day(s)"
 						],
 						"pattern": "^.*$"
 					},

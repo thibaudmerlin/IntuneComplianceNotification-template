@@ -2,7 +2,7 @@
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $client = "Company"
 $logPath = "$ENV:ProgramData\$client\Logs"
-$logFile = "$logPath\PwNotificationRemediation.log"
+$logFile = "$logPath\CheckComplianceRemediation.log"
 $device = hostname
 $errorOccurred = $null
 $funcUri = 'https://kyoscompliancecheck.azurewebsites.net/api/comp-notif-qry?code=ywVBor5v_z5s6PRAh-zZxm0auuZ-0rqTG5DGqgKY7xJqAzFupFsODA=='
@@ -89,17 +89,17 @@ Start-Transcript -Path $logFile -Force
         Exit 1
 	}
 
-    #region Get parameters and user pw timespan
+    #region Get parameters and device compliance state
     $fParams = @{
         Method      = 'Get'
-        Uri         = "$funcUri&user=$user"
+        Uri         = "$funcUri&device=$device"
         ContentType = 'Application/Json'
     }
     $json = Invoke-RestMethod @fParams
     #endregion
     #region parse json
-    $complianceState = $json.complianceState
-    If ($complianceState -eq "compliant") {
+    $isCompliant = $false
+    If ($isCompliant -eq $true) {
         Write-Output "The device is compliant : $complianceState"
         Stop-Transcript
         Exit 1
@@ -116,19 +116,15 @@ Start-Transcript -Path $logFile -Force
     #$Base64EncodeString = $texts.bodyText1
     #$Base64Text = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Base64EncodeString))
     #$BodyText1 = $Base64Text
-
+    $texts = $json.texts
+    $images = $json.images
+	[datetime]$lastsyncdate = $json.lastSyncDateTime
     $AttributionText = $texts.$AttributionText
     $HeaderText = $texts.headerText
     $TitleText = $texts.titleText
-    if ($timeSpan -ge 0) {
-        $BodyText1 = $texts.bodyText1start+$($timeSpan)+$texts.bodyText1end
-    }
-    else {
-        $BodyText1 = $texts.bodyText1Altstart+$($timeSpan -replace "-","")+$texts.bodyText1Altend
-    }
-    
-    $BodyText2 = $texts.bodyText2
-    $BodyText3 = $texts.bodyText3+$lastpasswordChange
+    $BodyText1 = $texts.bodyText1
+    $BodyText2 = $texts.bodyText2+$lastsyncdate
+    $BodyText3 = $texts.bodyText3
     $Action = $texts.actionUrl
     $ActionButtonContent = $texts.actionButtonContent
     $DismissButtonContent = $texts.dismissButtonContent
@@ -141,13 +137,33 @@ Start-Transcript -Path $logFile -Force
     }
     $LogoImage = $images.logoImg
     #endregion
-	
+	#region scheduled tasks and sync process
+	$taskName = "Schedule to run OMADMClient by client"
+	$timeout = 600 ##  seconds
+  	$timer =  [Diagnostics.Stopwatch]::StartNew()
+	if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) {
+		Start-ScheduledTask -TaskName $taskName
+		while (((Get-ScheduledTask -TaskName $taskName).State -ne  'Ready') -and  ($timer.Elapsed.TotalSeconds -lt $timeout)) {    
+		Write-Verbose  -Message "Waiting on scheduled task..."
+		Start-Sleep -Seconds  30   
+		}
+		$timer.Stop()
+  		Write-Verbose  -Message "We waited [$($timer.Elapsed.TotalSeconds)] seconds on the task 'TaskName'"
+		  $fParams = @{
+			Method      = 'Get'
+			Uri         = "$funcUri&device=$device"
+			ContentType = 'Application/Json'
+		}
+		$json = Invoke-RestMethod @fParams
+		[datetime]$lastsyncdate = $json.lastSyncDateTime
+	}	
+	#start de compliance sync
 	$syncIme = New-Object -ComObject Shell.Application
     $syncIme.open("intunemanagementextension://syncapp")
 
 	$syncIme = New-Object -ComObject Shell.Application
     $syncIme.open("intunemanagementextension://synccompliance")
-    
+    #endregion
 	$PSAppStatus = "True"
  
 	if ($PSAppStatus -eq "True") {
@@ -178,7 +194,7 @@ Start-Transcript -Path $logFile -Force
 	<visual>
 	<binding template="ToastGeneric">
 		<image placement="hero" src="$HeroImage"/>
-		<image id="1" placement="appLogoOverride" hint-crop="circle" src="$LogoImage"/>
+		<image id="1" placement="appLogoOverride" src="$LogoImage"/>
 		<text placement="attribution">$AttributionText</text>
 		<text>$HeaderText</text>
 		<group>
@@ -218,18 +234,18 @@ Start-Transcript -Path $logFile -Force
     }
     finally {
     if ($errorOccurred) {
-        Write-Warning "Password Expiration Notification completed with errors."
+        Write-Warning "Compliance Check Notification completed with errors."
         Stop-Transcript
         Throw $errorOccurred
         Exit 0
     }
     else {
-        Write-Host "Password Expiration Notification completed successfully."
+        Write-Host "Compliance Check Notification completed successfully."
         Stop-Transcript
         Exit 0
     }
 }
-Write-Host "Password Expiration Notification completed successfully."
+Write-Host "Compliance Check Notification completed successfully."
 Stop-Transcript
 Exit 0
 #endregion

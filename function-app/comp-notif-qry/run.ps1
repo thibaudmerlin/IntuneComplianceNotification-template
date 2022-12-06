@@ -153,11 +153,16 @@ if ($device) {
         $managedAadDeviceQuery = "devices/{0}" -f $aadDeviceId
         $managedAadDevice = (Get-JsonFromGraph -token $token -strQuery $managedAadDeviceQuery -ver v1.0)
     }
+    $txtToMap = $parameters.texts
+    $imgToMap = $parameters.images
     $result = [PSCustomObject]@{
         hash                        = $hashCheck
         lastSyncDateTime      = $managedDevice.lastSyncDateTime
         complianceState          = $managedDevice.complianceState
         isCompliant              = $managedAadDevice.isCompliant
+        texts                       = $txtToMap | Where-Object { $_ }
+        images                      = $imgToMap | Where-Object { $_ }
+        deviceId                    = $deviceId
     }
 }
 else {
