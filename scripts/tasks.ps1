@@ -16,16 +16,16 @@ $taskName = "Schedule to run OMADMClient by client"
 $timeout = 600 ##  seconds
 $data = Get-WinEvent -LogName Microsoft-Windows-AAD/Operational | Where-Object Message -Match $aadstsError | Select-Object -First 1
 [datetime]$timeref = (get-date).AddMinutes($timeSpan)
-[datetime]$timecreated = $data.TimeCreated
 #endregion
 #region script
 If ($null -ne $data) {
+    [datetime]$timecreated = $data.TimeCreated
     if ($timeref -lt $timecreated) {
         Write-Verbose -Message "There is an error in the last period, trying to launch the sheduled task to sync the policies"
         $timer =  [Diagnostics.Stopwatch]::StartNew()
-        if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) {
-            Start-ScheduledTask -TaskName $taskName
-            while (((Get-ScheduledTask -TaskName $taskName).State -ne  'Ready') -and  ($timer.Elapsed.TotalSeconds -lt $timeout)) {    
+        if (Get-ScheduledTask -TaskName "$taskName" -ErrorAction SilentlyContinue) {
+            Start-ScheduledTask -TaskName "$taskName"
+            while (((Get-ScheduledTask -TaskName "$taskName").State -ne  'Ready') -and  ($timer.Elapsed.TotalSeconds -lt $timeout)) {    
                 Write-Verbose  -Message "Waiting on scheduled task..."
                 Start-Sleep -Seconds  30   
             }
@@ -35,16 +35,21 @@ If ($null -ne $data) {
         $syncIme = New-Object -ComObject Shell.Application
         $syncIme.open("intunemanagementextension://synccompliance")
         Write-Verbose -Message "Compliance Check launched, task done"
+        Stop-Transcript
         Exit 0
         }
     }
     else {
         Write-Verbose -Message "Log with error $aadstsError found, but too old for this task"
+        Stop-Transcript
         Exit 0
     }
 }
 Else {
     Write-Verbose -Message "No log with the error $aadstsError found"
+    Stop-Transcript
     Exit 0
 }
+Stop-Transcript
+Exit 0
 #endregion
