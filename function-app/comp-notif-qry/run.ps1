@@ -136,7 +136,7 @@ $params = @{
     $token = Get-AuthHeader @params
 if ($device) {
     $status = [HttpStatusCode]::OK
-    $deviceQuery = "deviceManagement/managedDevices?`$filter=startswith(deviceName,'{0}')&`$select=id" -f $device
+    $deviceQuery = "deviceManagement/managedDevices?`$filter=deviceName eq '{0}'&`$select=id" -f $device
     $deviceId = (Get-JsonFromGraph -token $token -strQuery $deviceQuery -ver v1.0).id
     $deviceQuery
     $device
@@ -145,7 +145,7 @@ if ($device) {
         $managedDeviceQuery = "deviceManagement/managedDevices/{0}" -f $deviceId
         $managedDevice = (Get-JsonFromGraph -token $token -strQuery $managedDeviceQuery -ver v1.0)
     }
-    $aadDeviceQuery = "devices?`$filter=startswith(displayName,'{0}')&`$select=id" -f $device
+    $aadDeviceQuery = "devices?`$filter=displayName eq '{0}'&`$select=id" -f $device
     $aadDeviceId = (Get-JsonFromGraph -token $token -strQuery $aadDeviceQuery -ver v1.0).id
     $aadDeviceQuery
     $aadDeviceId
@@ -156,7 +156,7 @@ if ($device) {
 }
 #region if not compliant
     $deviceId = $deviceId | select-object -Unique
-
+    $deviceComplianceStatus = New-Object System.Collections.Generic.List[System.Object]
     foreach ($devId in $deviceId) {
         # get list of all compliance policies of this particular device
         $deviceCompliancePolicyQuery = "deviceManagement/managedDevices('{0}')/deviceCompliancePolicyStates" -f $deviceId
@@ -165,9 +165,9 @@ if ($device) {
             # get detailed information for each compliance policy (mainly errorDescription)
             foreach ($deviceComplianceId in $deviceCompliancePolicy.id) {
                 $deviceComplianceStatusQuery = "deviceManagement/managedDevices('$devId')/deviceCompliancePolicyStates('$deviceComplianceId')/settingStates"
-                $deviceComplianceStatus = (Get-JsonFromGraph -token $token -strQuery $deviceComplianceStatusQuery -ver beta)
-<# 
-                if ($justProblematic) {
+                $deviceComplianceStatusResult = (Get-JsonFromGraph -token $token -strQuery $deviceComplianceStatusQuery -ver beta)
+                $deviceComplianceStatus.Add($deviceComplianceStatusResult)
+<#                 if ($justProblematic) {
                     $deviceComplianceStatus = $deviceComplianceStatus | Where-Object { $_.state -ne "compliant" }
                 }
                 $deviceComplianceStatus | Select-Object @{n = 'deviceName'; e = { $device } }, state, errorDescription, userPrincipalName , setting, sources #>
@@ -191,7 +191,7 @@ if ($device) {
         texts                       = $txtToMap | Where-Object { $_ }
         images                      = $imgToMap | Where-Object { $_ }
         deviceId                    = $deviceId
-        deviceComplianceStatus      = $stsToMap | Where-Object { $_ }
+        deviceComplianceStatus      = $deviceComplianceStatus | Where-Object { $_ }
         deviceCompliancePolicy      = $deviceCompliancePolicy | Where-Object { $_ }
     }
 }
