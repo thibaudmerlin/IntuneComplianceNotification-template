@@ -153,6 +153,32 @@ if ($device) {
         $managedAadDeviceQuery = "devices/{0}" -f $aadDeviceId
         $managedAadDevice = (Get-JsonFromGraph -token $token -strQuery $managedAadDeviceQuery -ver v1.0)
     }
+#region if not compliant
+    $deviceId = $deviceId | select-object -Unique
+
+    foreach ($devId in $deviceId) {
+        # get list of all compliance policies of this particular device
+        $deviceCompliancePolicyQuery = "deviceManagement/managedDevices('{0}')/deviceCompliancePolicyStates" -f $deviceId
+        $deviceCompliancePolicy = (Get-JsonFromGraph -token $token -strQuery $deviceCompliancePolicyQuery -ver beta)
+        if ($deviceCompliancePolicy) {
+            # get detailed information for each compliance policy (mainly errorDescription)
+            $deviceCompliancePolicy | ForEach-Object {
+                $deviceComplianceId = $_.id
+                $deviceComplianceStatusQuery = "deviceManagement/managedDevices('$devId')/deviceCompliancePolicyStates('$deviceComplianceId')/settingStates"
+                $deviceComplianceStatus = (Get-JsonFromGraph -token $token -strQuery $deviceComplianceStatusQuery -ver beta)
+
+                if ($justProblematic) {
+                    $deviceComplianceStatus = $deviceComplianceStatus | Where-Object { $_.state -ne "compliant" }
+                }
+                $deviceComplianceStatus | Select-Object @{n = 'deviceName'; e = { $device } }, state, errorDescription, userPrincipalName , setting, sources
+            }
+        } else {
+            Write-Warning "There are no compliance policies for $devId device"
+        }
+    }
+
+#endregion
+
     $txtToMap = $parameters.texts
     $imgToMap = $parameters.images
     $result = [PSCustomObject]@{
@@ -163,6 +189,7 @@ if ($device) {
         texts                       = $txtToMap | Where-Object { $_ }
         images                      = $imgToMap | Where-Object { $_ }
         deviceId                    = $deviceId
+        deviceComplianceStatus      = $deviceComplianceStatus | Where-Object { $_ }
     }
 }
 else {
