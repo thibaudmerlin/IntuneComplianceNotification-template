@@ -156,7 +156,7 @@ if ($device) {
 }
 #region if not compliant
     $deviceId = $deviceId | select-object -Unique
-    $deviceComplianceStatus = New-Object System.Collections.Generic.List[System.Object]
+    $deviceComplianceStatus = New-Object System.Collections.Generic.List[System.Object] 
     foreach ($devId in $deviceId) {
         # get list of all compliance policies of this particular device
         $deviceCompliancePolicyQuery = "deviceManagement/managedDevices('{0}')/deviceCompliancePolicyStates" -f $deviceId
