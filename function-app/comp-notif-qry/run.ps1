@@ -166,7 +166,7 @@ if ($device) {
             foreach ($deviceComplianceId in $deviceCompliancePolicy.id) {
                 $deviceComplianceStatusQuery = "deviceManagement/managedDevices('$devId')/deviceCompliancePolicyStates('$deviceComplianceId')/settingStates"
                 $deviceComplianceStatusResult = (Get-JsonFromGraph -token $token -strQuery $deviceComplianceStatusQuery -ver beta)
-                $deviceComplianceStatus.Add($deviceComplianceStatusResult)
+                $deviceComplianceStatus.Add(($deviceComplianceStatusResult | Where-Object {$_.state -eq "nonCompliant"}))
 <#                 if ($justProblematic) {
                     $deviceComplianceStatus = $deviceComplianceStatus | Where-Object { $_.state -ne "compliant" }
                 }
@@ -180,9 +180,10 @@ if ($device) {
     $stsToMap = New-Object System.Collections.Generic.List[System.Object]
     $txtToMap = $parameters.texts
     $imgToMap = $parameters.images
-    foreach ($sts in $deviceComplianceStatus) {
+<#     foreach ($sts in $deviceComplianceStatus) {
         $stsToMap.Add($sts)
-    }
+    } #>
+<#     $stsToMap.Add(($sts | Where-Object {$_.state -eq "nonCompliant"})) #>
     $result = [PSCustomObject]@{
         hash                        = $hashCheck
         lastSyncDateTime      = $managedDevice.lastSyncDateTime
