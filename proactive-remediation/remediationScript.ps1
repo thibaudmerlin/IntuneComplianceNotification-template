@@ -125,6 +125,7 @@ Start-Transcript -Path $logFile -Force
     $BodyText1 = $texts.bodyText1
     $BodyText2 = $texts.bodyText2+$lastsyncdate
     $BodyText3 = $texts.bodyText3
+	$BodyText4 = $texts.bodyText4
     $Action = $texts.actionUrl
     $ActionButtonContent = $texts.actionButtonContent
     $DismissButtonContent = $texts.dismissButtonContent
@@ -188,6 +189,11 @@ Start-Transcript -Path $logFile -Force
         <group>
 			<subgroup>     
 				<text hint-style="body" hint-wrap="true" >$BodyText3</text>
+			</subgroup>
+		</group>
+		<group>
+			<subgroup>     
+				<text hint-style="body" hint-wrap="true" >$BodyText4</text>
 			</subgroup>
 		</group>
 	</binding>

@@ -193,7 +193,7 @@ if ($device) {
         images                      = $imgToMap | Where-Object { $_ }
         deviceId                    = $deviceId
         deviceComplianceStatus      = $deviceComplianceStatus | Where-Object { $_ }
-        deviceCompliancePolicy      = $deviceCompliancePolicy | Where-Object { $_ }
+        # deviceCompliancePolicy      = $deviceCompliancePolicy | Where-Object { $_ }
     }
 }
 else {
