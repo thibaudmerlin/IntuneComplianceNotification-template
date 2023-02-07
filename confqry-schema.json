@@ -1,7 +1,7 @@
 {
 	"definitions": {},
 	"$schema": "http://json-schema.org/draft-07/schema#", 
-	"$id": "https://example.com/object1668776755.json", 
+	"$id": "https://example.com/object1675759287.json", 
 	"title": "Root", 
 	"type": "object",
 	"required": [
@@ -24,6 +24,7 @@
 					"bodyText1",
 					"bodyText2",
 					"bodyText3",
+					"bodyText4",
 					"attributionText",
 					"actionButtonContent",
 					"dismissButtonContent",
@@ -36,7 +37,7 @@
 						"type": "string",
 						"default": "",
 						"examples": [
-							"Test Company Ltd"
+							"Kyos SA - Device compliance status"
 						],
 						"pattern": "^.*$"
 					},
@@ -46,7 +47,7 @@
 						"type": "string",
 						"default": "",
 						"examples": [
-							"Password Expiration Notice"
+							""
 						],
 						"pattern": "^.*$"
 					},
@@ -56,7 +57,7 @@
 						"type": "string",
 						"default": "",
 						"examples": [
-							"Your password is about to expire in : "
+							"Your device is not compliant, your access is blocked"
 						],
 						"pattern": "^.*$"
 					},
@@ -66,7 +67,7 @@
 						"type": "string",
 						"default": "",
 						"examples": [
-							"Please change it asap, if you're not able to change it, please contact the support."
+							"Last settings sync : "
 						],
 						"pattern": "^.*$"
 					},
@@ -76,7 +77,17 @@
 						"type": "string",
 						"default": "",
 						"examples": [
-							"Your password last change : "
+							"nonCompliant settings : "
+						],
+						"pattern": "^.*$"
+					},
+					"bodyText4": {
+						"$id": "#root/texts/items/bodyText4", 
+						"title": "Bodytext4", 
+						"type": "string",
+						"default": "",
+						"examples": [
+							"Try to sync your settings by opening the Company Portal -> settings -> sync"
 						],
 						"pattern": "^.*$"
 					},
@@ -96,7 +107,7 @@
 						"type": "string",
 						"default": "",
 						"examples": [
-							"Change password"
+							"Company Portal"
 						],
 						"pattern": "^.*$"
 					},
@@ -106,7 +117,7 @@
 						"type": "string",
 						"default": "",
 						"examples": [
-							"Remind me"
+							"Dismiss"
 						],
 						"pattern": "^.*$"
 					},
@@ -116,7 +127,7 @@
 						"type": "string",
 						"default": "",
 						"examples": [
-							"https://account.activedirectory.windowsazure.com/ChangePassword.aspx"
+							"companyportal:open"
 						],
 						"pattern": "^.*$"
 					}
@@ -145,7 +156,7 @@
 						"type": "string",
 						"default": "",
 						"examples": [
-							"C:\\Windows\\Web\\Wallpaper\\Theme1\\img1.jpg"
+							""
 						],
 						"pattern": "^.*$"
 					},
@@ -155,7 +166,7 @@
 						"type": "string",
 						"default": "",
 						"examples": [
-							"C:\\Windows\\Web\\Wallpaper\\Windows\\img19.jpg"
+							""
 						],
 						"pattern": "^.*$"
 					},
@@ -165,7 +176,7 @@
 						"type": "string",
 						"default": "",
 						"examples": [
-							""
+							"https://kyosintunepublic.blob.core.windows.net/img/01.kyos.logo.rouge.128px.icone.png"
 						],
 						"pattern": "^.*$"
 					}

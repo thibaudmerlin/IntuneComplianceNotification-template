@@ -111,24 +111,26 @@ Start-Transcript -Path $logFile -Force
     #endregion
     #region add variables values
 
-    #use special letters in notification text : you can use special letters (except &)by using a Base64encoded string in the json instead of the text, 
-    #and adding this for each variable :
-    #$Base64EncodeString = $texts.bodyText1
-    #$Base64Text = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Base64EncodeString))
-    #$BodyText1 = $Base64Text
     $texts = $json.texts
     $images = $json.images
 	[datetime]$lastsyncdate = $json.lastSyncDateTime
+	$deviceComplianceStatus = $json.deviceComplianceStatus
+	$nonCompliantSettings = ""
+	foreach ($obj in $deviceComplianceStatus){
+		$setting = " "+$obj.setting
+		$nonCompliantSettings += $setting
+	}
     $AttributionText = $texts.$AttributionText
     $HeaderText = $texts.headerText
     $TitleText = $texts.titleText
     $BodyText1 = $texts.bodyText1
     $BodyText2 = $texts.bodyText2+$lastsyncdate
-    $BodyText3 = $texts.bodyText3
+    $BodyText3 = $texts.bodyText3+$nonCompliantSettings
 	$BodyText4 = $texts.bodyText4
     $Action = $texts.actionUrl
     $ActionButtonContent = $texts.actionButtonContent
     $DismissButtonContent = $texts.dismissButtonContent
+
 	
 	if ($RunningOS.BuildNumber -ge "22000"){
         $HeroImage = $images.heroImgW11
@@ -171,11 +173,6 @@ Start-Transcript -Path $logFile -Force
 		<image id="1" placement="appLogoOverride" src="$LogoImage"/>
 		<text placement="attribution">$AttributionText</text>
 		<text>$HeaderText</text>
-		<group>
-			<subgroup>
-				<text hint-style="title" hint-wrap="true" >$TitleText</text>
-			</subgroup>
-		</group>
 		<group>
 			<subgroup>     
 				<text hint-style="body" hint-wrap="true" >$BodyText1</text>

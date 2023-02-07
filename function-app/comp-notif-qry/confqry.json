@@ -6,7 +6,7 @@
             "bodyText1": "Your device is not compliant, your access is blocked",
             "bodyText2": "Last settings sync : ",
             "bodyText3": "nonCompliant settings : ",
-            "bodyText4": "We're doing some sync processes on your device, Open the Company Portal -> This device -> Check Access",
+            "bodyText4": "Try to sync your settings by opening the Company Portal -> settings -> sync",
             "attributionText": "Information",
             "actionButtonContent": "Company Portal",
 	          "dismissButtonContent": "Dismiss",

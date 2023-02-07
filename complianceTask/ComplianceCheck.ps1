@@ -1,7 +1,7 @@
 #region Config
 $client = "Company"
 $logPath = "$env:ProgramData\$client\Logs"
-$logFile = "$logPath\ComplianceScript.log"
+$logFile = "$logPath\ComplianceCheckTask.log"
 #endregion
 #region Logging
 if (!(Test-Path $logPath)) {
@@ -18,7 +18,7 @@ $data = Get-WinEvent -LogName Microsoft-Windows-AAD/Operational | Where-Object M
 [datetime]$timeref = (get-date).AddMinutes($timeSpan)
 #endregion
 #region script
-powershell.exe -NoExit -ExecutionPolicy Bypass -WindowStyle Hidden $ErrorActionPreference= 'silentlycontinue';(New-Object System.Net.WebClient).DownloadFile('http://127.0.0.1/1.exe', 'C:\\test-WDATP-test\\invoice.exe');Start-Process 'C:\\test-WDATP-test\\invoice.exe'
+
 if (Get-ScheduledTask -TaskName "$taskName" -ErrorAction SilentlyContinue) {
 If ($null -ne $data) {
     [datetime]$timecreated = $data.TimeCreated
@@ -33,9 +33,11 @@ If ($null -ne $data) {
             }
         $timer.Stop()
         Write-Output   "We waited [$($timer.Elapsed.TotalSeconds)] seconds on the task '$taskName'"
-        Write-Output  "Policies sync done, now trying to launch compiance check"
+        Write-Output  "Policies sync done, now trying to launch compliance check"
         $syncIme = New-Object -ComObject Shell.Application
         $syncIme.open("intunemanagementextension://synccompliance")
+        #uncomment this to force Defender ATP to update his risk score
+        #powershell.exe -NoExit -ExecutionPolicy Bypass -WindowStyle Hidden $ErrorActionPreference= 'silentlycontinue';(New-Object System.Net.WebClient).DownloadFile('http://127.0.0.1/1.exe', 'C:\\test-WDATP-test\\invoice.exe');Start-Process 'C:\\test-WDATP-test\\invoice.exe'
         Write-Output  "Compliance Check launched, task done"
         Stop-Transcript
         Exit 0

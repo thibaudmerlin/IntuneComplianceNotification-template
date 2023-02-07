@@ -154,6 +154,7 @@ if ($device) {
         $managedAadDevice = (Get-JsonFromGraph -token $token -strQuery $managedAadDeviceQuery -ver v1.0)
     }
 }
+#endregion
 #region if not compliant
     $deviceId = $deviceId | select-object -Unique
     $deviceComplianceStatus = New-Object System.Collections.Generic.List[System.Object] 
@@ -167,10 +168,6 @@ if ($device) {
                 $deviceComplianceStatusQuery = "deviceManagement/managedDevices('$devId')/deviceCompliancePolicyStates('$deviceComplianceId')/settingStates"
                 $deviceComplianceStatusResult = (Get-JsonFromGraph -token $token -strQuery $deviceComplianceStatusQuery -ver beta)
                 $deviceComplianceStatus.Add(($deviceComplianceStatusResult | Where-Object {$_.state -eq "nonCompliant"}))
-<#                 if ($justProblematic) {
-                    $deviceComplianceStatus = $deviceComplianceStatus | Where-Object { $_.state -ne "compliant" }
-                }
-                $deviceComplianceStatus | Select-Object @{n = 'deviceName'; e = { $device } }, state, errorDescription, userPrincipalName , setting, sources #>
             }
         }
         else {
@@ -180,20 +177,15 @@ if ($device) {
     $stsToMap = New-Object System.Collections.Generic.List[System.Object]
     $txtToMap = $parameters.texts
     $imgToMap = $parameters.images
-<#     foreach ($sts in $deviceComplianceStatus) {
-        $stsToMap.Add($sts)
-    } #>
-<#     $stsToMap.Add(($sts | Where-Object {$_.state -eq "nonCompliant"})) #>
     $result = [PSCustomObject]@{
         hash                        = $hashCheck
-        lastSyncDateTime      = $managedDevice.lastSyncDateTime
-        complianceState          = $managedDevice.complianceState
-        isCompliant              = $managedAadDevice.isCompliant
+        lastSyncDateTime            = $managedDevice.lastSyncDateTime
+        complianceState             = $managedDevice.complianceState
+        isCompliant                 = $managedAadDevice.isCompliant
         texts                       = $txtToMap | Where-Object { $_ }
         images                      = $imgToMap | Where-Object { $_ }
         deviceId                    = $deviceId
         deviceComplianceStatus      = $deviceComplianceStatus | Where-Object { $_ }
-        # deviceCompliancePolicy      = $deviceCompliancePolicy | Where-Object { $_ }
     }
 }
 else {

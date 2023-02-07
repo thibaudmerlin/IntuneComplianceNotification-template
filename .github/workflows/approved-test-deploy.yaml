@@ -9,9 +9,9 @@ env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: .\function-app # set this to the path to your web app project, defaults to the repository root
   TESTS_PATH: .\tests
   FA_ENDPOINT_UAT: ${{ secrets.FA_ENDPOINT_UAT }}
-  SAMPLE_USER: ${{ secrets.SAMPLE_USER }}
-  FA_UAT_NAME: pwexpnotifqry/uat
-  FA_PROD_NAME: pwexpnotifqry
+  SAMPLE_DEVICE: ${{ secrets.SAMPLE_DEVICE }}
+  FA_UAT_NAME: confqry/uat
+  FA_PROD_NAME: confqry
 
 jobs:
   publish-uat-and-prod:

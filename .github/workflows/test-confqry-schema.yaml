@@ -8,11 +8,11 @@ on:
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: .\function-app
-  JSON_PATH: .\function-app\pw-exp-notif-qry\confqry.json
+  JSON_PATH: .\function-app\comp-notif-qry\confqry.json
   SCHEMA_PATH: .\confqry_schema.json
   TESTS_PATH: .\tests
   FA_ENDPOINT_UAT: ${{ secrets.FA_ENDPOINT_UAT }}
-  SAMPLE_USER: ${{ secrets.SAMPLE_USER }}
+  SAMPLE_DEVICE: ${{ secrets.SAMPLE_DEVICE }}
 
 jobs:
   build-and-publish-UAT:
