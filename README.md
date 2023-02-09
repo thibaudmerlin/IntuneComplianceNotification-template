@@ -24,6 +24,7 @@ You can use proactive remediation only, or scheduled task only or both, as you w
 
 ## 2. Create an Azure Function
 <img width="550" alt="image" src="https://user-images.githubusercontent.com/107478270/202721339-711e5cbf-b2e2-429a-92e6-bdac6daf528a.png">
+
 - Add App Insight to monitor the function
 - Create a slot for UAT
 - Create environment variables for PRD and UAT (in configuration) :
