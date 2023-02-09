@@ -5,7 +5,7 @@ $logPath = "$ENV:ProgramData\$client\Logs"
 $logFile = "$logPath\ComplianceNotificationTask.log"
 $device = hostname
 $errorOccurred = $null
-$funcUri = 'https://kyoscompliancecheck.azurewebsites.net/api/comp-notif-qry?code=ywVBor5v_z5s6PRAh-zZxm0auuZ-0rqTG5DGqgKY7xJqAzFupFsODA=='
+$funcUri = '<funcURI>'
 $UserContext = [Security.Principal.WindowsIdentity]::GetCurrent()
 $WindirTemp = Join-Path $Env:Windir -Childpath "Temp"
 
@@ -99,7 +99,6 @@ Start-Transcript -Path $logFile -Force
     #endregion
     #region parse json
 	$isCompliant = $json.isCompliant
-    $isCompliant = $false
     If ($isCompliant -eq $true) {
         Write-Output "The device is compliant : $complianceState"
         Stop-Transcript

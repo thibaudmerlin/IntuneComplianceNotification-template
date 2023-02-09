@@ -4,7 +4,7 @@ $client = "Kyos"
 $logPath = "$ENV:ProgramData\$client\Logs"
 $logFile = "$logPath\ComplianceCheckDetection.log"
 $device = hostname
-$funcUri = 'https://kyoscompliancecheck.azurewebsites.net/api/comp-notif-qry?code=ywVBor5v_z5s6PRAh-zZxm0auuZ-0rqTG5DGqgKY7xJqAzFupFsODA=='
+$funcUri = '<funcURI>'
 $UserContext = [Security.Principal.WindowsIdentity]::GetCurrent()
 $WindirTemp = Join-Path $Env:Windir -Childpath "Temp"
  
