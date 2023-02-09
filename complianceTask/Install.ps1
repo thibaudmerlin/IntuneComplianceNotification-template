@@ -30,14 +30,16 @@ Write-Host "Creating Compliance Notification script and storing: $scriptsPath\$c
 Copy-Item "$PSScriptRoot\$complianceNotificationScript" -Destination "$scriptsPath\$complianceNotificationScript" -Force
 #endregion
 #region Scheduled Task
-$date=Get-Date -format s
-[xml]$ComplianceTaskXml = @"
+$date = Get-Date -format s
+$author = $env:username
+$uri = $Client+"_ComplianceCheck"
+$ComplianceTaskXml = @"
 <?xml version="1.0" encoding="UTF-16"?>
 <Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
     <RegistrationInfo>
         <Date>$date</Date>
-        <Author>$env:username</Author>
-        <URI>\$Client`_ComplianceCheck</URI>
+        <Author>$author</Author>
+        <URI>\$uri</URI>
     </RegistrationInfo>
     <Triggers>
         <BootTrigger>
@@ -83,10 +85,7 @@ $date=Get-Date -format s
     </Actions>
 </Task>
 "@
-<# $Load = [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime]
-$ComplianceXml = New-Object -TypeName Windows.Data.Xml.Dom.XmlDocument
-$ComplianceXml.LoadXml($ComplianceTaskXml.OuterXml)
-write-host $ComplianceXml #>
+
 try {
     Write-Host "Setting up scheduled task"
     if ((Get-ScheduledTask -TaskName "$client`_ComplianceCheck" -TaskPath "\" -ErrorAction SilentlyContinue)) {

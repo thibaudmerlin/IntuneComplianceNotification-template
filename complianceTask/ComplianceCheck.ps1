@@ -34,8 +34,17 @@ If ($null -ne $data) {
         $timer.Stop()
         Write-Output   "We waited [$($timer.Elapsed.TotalSeconds)] seconds on the task '$taskName'"
         Write-Output  "Policies sync done, now trying to launch compliance check"
-        $syncIme = New-Object -ComObject Shell.Application
-        $syncIme.open("intunemanagementextension://synccompliance")
+        try{
+            $syncIme = New-Object -ComObject Shell.Application
+            $syncIme.open("intunemanagementextension://synccompliance")
+        }
+        catch {
+            $errMsg = $_.Exception.Message
+        }
+        if ($errMsg) {
+            Write-Warning $errMsg
+            throw $errMsg
+        }
         #uncomment this to force Defender ATP to update his risk score
         #powershell.exe -NoExit -ExecutionPolicy Bypass -WindowStyle Hidden $ErrorActionPreference= 'silentlycontinue';(New-Object System.Net.WebClient).DownloadFile('http://127.0.0.1/1.exe', 'C:\\test-WDATP-test\\invoice.exe');Start-Process 'C:\\test-WDATP-test\\invoice.exe'
         Write-Output  "Compliance Check launched, task done"

@@ -1,26 +1,18 @@
-# Password Expiration Notification FunctionApp and Proactive Remediation - Intune
+# Compliance Check, Notification and Remdiation FunctionApp and Proactive Remediation/Scheduled Tasks - Intune
 
-- Azure Function App to serve as midddleware for a pw expiration notif solution for cloud managed devices in hybrid env. and Remdiation scripts
-- Special thanks to you guys : https://www.smthwentright.com/2022/03/07/password-reminder-with-proactive-remediation-for-aad-joined-devices/ for the initial ideas
+- Azure Function App to serve as midddleware for a compliance notif solution for cloud managed devices with Proactive Remediation and/or Scheduled Tasks
 - Tested on Windows 10 and Windows 11
 
-# Synchronize your internal password expiration policy with AzureAD
-- Reference : https://learn.microsoft.com/en-us/azure/active-directory/hybrid/how-to-connect-password-hash-synchronization#enforcecloudpasswordpolicyforpasswordsyncedusers
-- You need to use PassSyncedUsers in AzureADConnect
-- Be sure you're doing this outside working hours
-- Configure the AzureAD Password expiration period in the admin portal (this should be the same than the internal one, and it's tenant wide, no different policies allowed)
-- Connect to MSonline
-- Type : Set-MsolDirSyncFeature -Feature EnforceCloudPasswordPolicyForPasswordSyncedUsers
-- Connect to AzureAD
-- Check account with : (Get-AzureADUser -objectID <User Object ID>).passwordpolicies
-- If you want to activate this for synced users :  Get-AzureADUser -All $true | Where-Object {$_.DirSyncEnabled -eq $true} | Set-AzureADUser -PasswordPolicies None (Better to do it with a group)
-- Don't forget to exclude the azureadsync user by using : Set-AzureADUser {AADSyncUser} -PasswordPolicies DisablePasswordExpiration
-- Check : Get-AzureADUser -All $true | Where-Object {$_.DirSyncEnabled -eq $true} | Select UserPrincipalName,PasswordPolicies
+# Problem
+- You configured compliance policies in Intune
+- You configured Conditionnal Access rules to block access if the device is not compliant
+- Your devices are Cloud managed (Intune)
+- Sometimes your users complain about lossing their access to Online Tools without any clue and/or notif
 
 # Installation
 ## 1. Create App Registration
-- Create a new App Registration in AzureAD, name Company-LogonScript (Single Tenant, no redirect uri)
-- Add API permissions : Directory.Read.All (application), User.Read.All (application)
+- Create a new App Registration in AzureAD, name Company-DeviceComplianceNotif (Single Tenant, no redirect uri)
+- Add API permissions : Directory.Read.All (application), DeviceManagementConfiguration.Read.All (application), DeviceManagementManagedDevice.Read.All (application)
 - Create a secret and save the value
 - Save the Client(app) ID, save the Tenant ID
 
@@ -37,25 +29,24 @@
 - Clone this repository
 - *Optional : Create the env. variable for pipeline
 
-## 4. Customize the files for the customer and deploy the function
+## 3. Customize the files for the customer and deploy the function
 - Connect VSCode to the GitHub repo
 - Add desired paramters in the confqry.json (respect the schema)
-    - You can use online images, just replace image path with http path
-    - You can use special letters in text, in this case encode your string in Base64 and put the encoded string in the json instead of the text, then follow the procedure in the remediationScript to allow this
+    - You can use online images, just replace image path with http path (hero and/or logo)
 - Deploy the function to UAT by using Azure Functions:Deploy to Slot... in VSCode
 - If tests are ok, deploy it to PRD by using Azure Functions:Deploy to Function App... in VSCode
 - Gather the function URI and save it
 - Change variable in remediation scripts ($client, $funcUri)
 
-
+## 4. Package the app and deploy it to devices
 ## 5. Create the proactive remediation in Intune
 - Create a proactive remediation with these parameters :
     - Execute in User Context : Yes
     - Execute in Powershell64bits : Yes
-- Assign it and don't forget to setup the schedule (at least once a day, better each 3hours) 
+- Assign it and don't forget to setup the schedule (each hour) 
 - Grab a coffee and wait :)
 # Folder overview
-
+- complianceTask contains all files to be packaged to deploy an app in Intune to register all desired scheduled tasks
 - function-app contains the function app code that will be deployed to Azure
 - proactive-remediation contains the code that will be packaged and deployed via Intune ProActive Remediation
 - tests contains the pester tests to be used for interactive testing OR ci/cd deployment
