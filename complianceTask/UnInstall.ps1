@@ -13,9 +13,9 @@ Start-Transcript -Path "$logFile" -Force
 #endregion
 #region Scheduled Task
 try {
-    Write-Verbose "Deletting scheduled task"
-    if ((Get-ScheduledTask -TaskName "$client`_Compliance" -TaskPath "\" -ErrorAction SilentlyContinue)) {
-        Unregister-ScheduledTask -TaskName "$client`_Compliance" -Confirm:$false
+    Write-Verbose "Deletting scheduled tasks"
+    if ((Get-ScheduledTask -TaskName "$client`_ComplianceCheck" -TaskPath "\" -ErrorAction SilentlyContinue)) {
+        Unregister-ScheduledTask -TaskName "$client`_ComplianceCheck" -Confirm:$false
         Write-Verbose "Scheduled task deleted successfully"
         if (Test-Path "$scriptsPath") {
             Remove-Item -Path "$scriptsPath" -Force -Recurse
@@ -23,7 +23,18 @@ try {
         }
     }
     else {
-        Write-Verbose "Scheduled task already deleted."
+        Write-Verbose "Scheduled task ComplianceCheck already deleted."
+    }
+    if ((Get-ScheduledTask -TaskName "$client`_ComplianceNotification" -TaskPath "\" -ErrorAction SilentlyContinue)) {
+        Unregister-ScheduledTask -TaskName "$client`_ComplianceNotification" -Confirm:$false
+        Write-Verbose "Scheduled task deleted successfully"
+        if (Test-Path "$scriptsPath") {
+            Remove-Item -Path "$scriptsPath" -Force -Recurse
+            Write-Verbose "Scripts deleted successfully"
+        }
+    }
+    else {
+        Write-Verbose "Scheduled task ComplianceNotification already deleted."
     }
 }
 catch {

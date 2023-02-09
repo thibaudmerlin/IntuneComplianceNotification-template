@@ -39,6 +39,7 @@ If ($null -ne $data) {
         #uncomment this to force Defender ATP to update his risk score
         #powershell.exe -NoExit -ExecutionPolicy Bypass -WindowStyle Hidden $ErrorActionPreference= 'silentlycontinue';(New-Object System.Net.WebClient).DownloadFile('http://127.0.0.1/1.exe', 'C:\\test-WDATP-test\\invoice.exe');Start-Process 'C:\\test-WDATP-test\\invoice.exe'
         Write-Output  "Compliance Check launched, task done"
+        Start-ScheduledTask -TaskName "$client`_ComplianceNotification"
         Stop-Transcript
         Exit 0
         }

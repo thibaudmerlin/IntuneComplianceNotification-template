@@ -33,7 +33,8 @@ Start-Transcript -Path $logFile -Force
 #endregion
 #region check compliance with Intune attribute
     $complianceState = $json.complianceState
-    If ($complianceState -ne "compliant") {
+    $isCompliant = $json.isCompliant
+    If ($isCompliant -ne $true) {
         Write-Output "The device is not compliant : $complianceState"
         Stop-Transcript
         Exit 1

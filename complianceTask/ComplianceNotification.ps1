@@ -2,7 +2,7 @@
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $client = "Company"
 $logPath = "$ENV:ProgramData\$client\Logs"
-$logFile = "$logPath\CheckComplianceRemediation.log"
+$logFile = "$logPath\ComplianceNotificationTask.log"
 $device = hostname
 $errorOccurred = $null
 $funcUri = 'https://kyoscompliancecheck.azurewebsites.net/api/comp-notif-qry?code=ywVBor5v_z5s6PRAh-zZxm0auuZ-0rqTG5DGqgKY7xJqAzFupFsODA=='
@@ -98,6 +98,7 @@ Start-Transcript -Path $logFile -Force
     $json = Invoke-RestMethod @fParams
     #endregion
     #region parse json
+	$isCompliant = $json.isCompliant
     $isCompliant = $false
     If ($isCompliant -eq $true) {
         Write-Output "The device is compliant : $complianceState"
@@ -122,7 +123,7 @@ Start-Transcript -Path $logFile -Force
 	}
     $AttributionText = $texts.$AttributionText
     $HeaderText = $texts.headerText
-    $TitleText = $texts.titleText
+    #$TitleText = $texts.titleText
     $BodyText1 = $texts.bodyText1
     $BodyText2 = $texts.bodyText2+$lastsyncdate
     $BodyText3 = $texts.bodyText3+$nonCompliantSettings
