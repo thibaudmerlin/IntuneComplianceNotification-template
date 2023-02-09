@@ -4,6 +4,7 @@ $scriptsPath = "$env:ProgramData\$client\Scripts\ComplianceScript"
 $logPath = "$env:ProgramData\$client\Logs"
 $logFile = "$logPath\ComplianceScript-RunOnceConfig.log"
 $complianceScript = "ComplianceCheck.ps1"
+$complianceNotificationScript = "remediationScript.ps1"
 $buildId = "afd21f58-9c02-41b0-87a6-95745bd02153"
 #endregion
 #region Logging
@@ -39,17 +40,16 @@ try {
         $Task.Settings.DisallowStartIfOnBatteries = $false
         $Task.Settings.StopIfGoingOnBatteries = $false
 
-        $trigger = $task.triggers.Create(8)
+        $trigger = $task.triggers.Create(9)
         $trigger.Enabled = $true
-        $trigger.Repetition.Interval="PT15M" # 15 minutes
-        $trigger.Repetition.StopAtDurationEnd=$false # on to infinity
+        $trigger.Delay="PT2M" # 2 minutes
         $trigger.Id="Startup Trigger"
-        $action = $Task.Actions.Create(0)
+
         $action.Path = "powershell.exe"
-        $action.Arguments = " -ExecutionPolicy `"Bypass`" -NoProfile -NonInteractive -WindowStyle hidden -File `"$scriptsPath\$complianceScript`""
+        $action.Arguments = " -ExecutionPolicy `"Bypass`" -NoProfile -NonInteractive -WindowStyle hidden -File `"$scriptsPath\$complianceNotificationScript`""
 
         $taskFolder = $ShedService.GetFolder("\")
-        $taskFolder.RegisterTaskDefinition("$client`_Compliance", $Task , 5, 'Local System', $null, 4) | Out-Null
+        $taskFolder.RegisterTaskDefinition("$client`_Compliance", $Task , 6, 'Users', $null, 4) | Out-Null
         Write-Host $script:tick -ForegroundColor Green
     }
     else {
