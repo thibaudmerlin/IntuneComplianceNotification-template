@@ -12,7 +12,7 @@
 
 # Solution
 - The app function parse all device compliance state and return if it's compliant or not
-- The proactive remediation show a toast notification  to the user if the device is not compliant, show wgich setting is not compliant, then add a shorcut to the company portal to sync settings ans poilcies
+- The proactive remediation show a toast notification  to the user if the device is not compliant, show which setting is not compliant, then add a shorcut to the company portal to sync settings ans policies
 - The scheduled task ComplianceNotification has the same behavior than the proactive remediation but launch at logon of any user with a 2mn delay (can be changed)
 - The scheduled task ComplianceCheck parse the windows event logs to searcg any AADSTS53003 errors, then launch the sync task 'Schedule to run OMADMClient by client' and try to evaluate the compliance policies by using "intunemanagementextension://synccompliance" and also launch the task ComplianceNotification to notify the user, this task scheduled every 15mn and parse the last 15mn windows events. This is the only i found to detect any AADSTS53003 error, XPath is not capable to filter event description
 You can use proactive remediation only, or scheduled task only or both, as you whish :)
