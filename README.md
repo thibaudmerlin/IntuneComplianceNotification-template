@@ -7,7 +7,7 @@
 - You configured compliance policies in Intune
 - You configured Conditionnal Access rules to block access if the device is not compliant
 - Your devices are Cloud managed (Intune)
-- Sometimes your users complain about lossing their access to Online Tools without any clue and/or notif
+- Sometimes your users complain about loosing their access to Online Tools without any clue and/or notif
 
 # Solution
 - The app function parse all device compliance state and return if it's compliant or not
