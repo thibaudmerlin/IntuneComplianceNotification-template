@@ -39,6 +39,7 @@ You can use proactive remediation only, or scheduled task only or both, as you w
 - Connect VSCode to the GitHub repo
 - Add desired paramters in the confqry.json (respect the schema)
     - You can use online images, just replace image path with http path (hero and/or logo)
+    - You can create a public azure blob account and put image there (logo : 128px is the good size)
 - Deploy the function to UAT by using Azure Functions:Deploy to Slot... in VSCode
 - If tests are ok, deploy it to PRD by using Azure Functions:Deploy to Function App... in VSCode
 - Gather the function URI and save it

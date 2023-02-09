@@ -1,7 +1,7 @@
 {
         "texts": [
           {
-            "headerText": "Kyos SA - Device compliance status",
+            "headerText": "Company - Device compliance status",
             "titleText": "",
             "bodyText1": "Your device is not compliant, your access is blocked",
             "bodyText2": "Last settings sync : ",
@@ -17,7 +17,7 @@
           {
             "heroImgW10": "",
             "heroImgW11": "",
-            "logoImg": "https://kyosintunepublic.blob.core.windows.net/img/01.kyos.logo.rouge.128px.icone.png"
+            "logoImg": ""
           }
         ]
   }
