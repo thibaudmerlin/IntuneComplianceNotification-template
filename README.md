@@ -31,11 +31,12 @@ You can use proactive remediation only, or scheduled task only or both, as you w
     - client_secret = yourclientSecret
     - tenant_id = yourtenantID
 - *Optional : you can enforce certificate auth in the azure function in strict env.
+
 ## 3. Clone the github repo
 - Clone this repository
 - *Optional : Create the env. variable for pipeline
 
-## 3. Customize the files for the customer and deploy the function
+## 4. Customize the files for the customer and deploy the function
 - Connect VSCode to the GitHub repo
 - Add desired paramters in the confqry.json (respect the schema)
     - You can use online images, just replace image path with http path (hero and/or logo)
@@ -45,13 +46,13 @@ You can use proactive remediation only, or scheduled task only or both, as you w
 - Gather the function URI and save it
 - Change variable in remediation scripts ($client, $funcUri)
 
-## 4. Package the win32 app and deploy it to devices
+## 5. Package the win32 app and deploy it to devices
 - Donwload [win32 prep tool](https://github.com/Microsoft/Microsoft-Win32-Content-Prep-Tool)
-- Put all the files into the logonscript folder in the intunewin package
+- Put all the files into the complianceTask folder in the intunewin package
 - Deploy the App in intune and use the commands :
     - Install Command : Powershell.exe -ExecutionPolicy ByPass -File .\Install.ps1
     - Uninstall Command : Powershell.exe -ExecutionPolicy ByPass -File .\UnInstall.ps1
-## 5. Create the proactive remediation in Intune
+## 6. Create the proactive remediation in Intune
 - Create a proactive remediation with these parameters :
     - Execute in User Context : Yes
     - Execute in Powershell64bits : Yes
