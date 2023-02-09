@@ -1,4 +1,5 @@
-# Compliance Check, Notification and Remdiation FunctionApp and Proactive Remediation/Scheduled Tasks - Intune
+#![Icon-KYOS-Apps-256px](https://user-images.githubusercontent.com/107478270/217793968-32c87952-1520-46f6-8d70-edb4bb54b5e2.png)
+ Compliance Check, Notification and Remdiation FunctionApp and Proactive Remediation/Scheduled Tasks - Intune
 
 - Azure Function App to serve as midddleware for a compliance notif solution for cloud managed devices with Proactive Remediation and/or Scheduled Tasks
 - Tested on Windows 10 and Windows 11
