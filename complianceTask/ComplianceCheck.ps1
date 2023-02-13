@@ -54,7 +54,7 @@ If ($null -ne $data) {
         }
     }
     else {
-        Write-Output  "Log with error $aadstsError found in the last $timeSpan min(s)"
+        Write-Output  "Log with error $aadstsError found out the last $timeSpan min(s)"
         Stop-Transcript
         Exit 0
     }
