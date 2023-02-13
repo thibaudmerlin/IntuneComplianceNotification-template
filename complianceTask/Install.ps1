@@ -31,7 +31,7 @@ Copy-Item "$PSScriptRoot\$complianceNotificationScript" -Destination "$scriptsPa
 #endregion
 #region Scheduled Task
 $date = Get-Date -format s
-$author = $env:username
+$author = "Admin"
 $uri = $Client+"_ComplianceCheck"
 $ComplianceTaskXml = @"
 <?xml version="1.0" encoding="UTF-16"?>
