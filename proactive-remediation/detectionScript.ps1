@@ -1,6 +1,6 @@
 #region Config
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$client = "Kyos"
+$client = "Company"
 $logPath = "$ENV:ProgramData\$client\Logs"
 $logFile = "$logPath\ComplianceCheckDetection.log"
 $device = hostname
