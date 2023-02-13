@@ -97,7 +97,7 @@ try {
         Write-Host "Scheduled Task already configured, deleting..." -ForegroundColor Yellow
     }
 #register compliance sync task
-    Register-ScheduledTask -TaskName "$Client`_ComplianceCheck" -Xml $ComplianceTaskXml -Force
+    Register-ScheduledTask -TaskName "$client`_ComplianceCheck" -Xml $ComplianceTaskXml -Force
 #register compliance notification task
     $ShedService = New-Object -comobject 'Schedule.Service'
     $ShedService.Connect()
