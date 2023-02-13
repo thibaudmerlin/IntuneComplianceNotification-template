@@ -153,7 +153,7 @@ if ($device) {
         $managedAadDeviceQuery = "devices/{0}" -f $aadDeviceId
         $managedAadDevice = (Get-JsonFromGraph -token $token -strQuery $managedAadDeviceQuery -ver v1.0)
     }
-}
+
 #endregion
 #region if not compliant
     $deviceId = $deviceId | select-object -Unique
@@ -188,9 +188,10 @@ if ($device) {
         deviceComplianceStatus      = $deviceComplianceStatus | Where-Object { $_ }
     }
 }
+}
 else {
     $status = [HttpStatusCode]::BadRequest
-    $result = @{"Error" = "Please pass a name on the query string or in the request body."} | ConvertTo-Json
+    $result = @{"Error" = "Please pass a device on the query string or in the request body."} | ConvertTo-Json
 }
 #endregion
 #region output
