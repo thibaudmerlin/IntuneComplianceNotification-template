@@ -5,6 +5,7 @@ $logPath = "$env:ProgramData\$client\Logs"
 $logFile = "$logPath\ComplianceScript-RunOnceConfig.log"
 $complianceScript = "ComplianceCheck.ps1"
 $complianceNotificationScript = "ComplianceNotification.ps1"
+$psRun = "psRun.vbs"
 $buildId = "afd21f58-9c02-41b0-87a6-95745bd02153"
 #endregion
 #region Logging
@@ -28,6 +29,21 @@ Write-Host "Creating Compliance script and storing: $scriptsPath\$complianceScri
 Copy-Item "$PSScriptRoot\$complianceScript" -Destination "$scriptsPath\$complianceScript" -Force
 Write-Host "Creating Compliance Notification script and storing: $scriptsPath\$complianceNotificationScript" -ForegroundColor Yellow
 Copy-Item "$PSScriptRoot\$complianceNotificationScript" -Destination "$scriptsPath\$complianceNotificationScript" -Force
+#endregion
+#region Bootstrap Contents
+$bootstrapContents = @'
+Set objShell = CreateObject("Wscript.Shell")
+if Wscript.arguments.count > 0 then
+    sPath = Wscript.Arguments(0)
+else
+    sPath = objShell.CurrentDirectory + "\{0}"
+end if
+Dim PSRun
+PSRun = "powershell.exe -WindowStyle hidden -ExecutionPolicy bypass -NonInteractive -File " & sPath
+objShell.Run(PSRun),0
+'@ -f $logonScript
+Write-Host "Creating logon script bootstrap and storing: $scriptsPath\$psRun" -ForegroundColor Yellow
+Out-File -FilePath "$scriptsPath\$psRun" -Encoding unicode -Force -InputObject $bootstrapContents -NoNewline
 #endregion
 #region Scheduled Task
 $date = Get-Date -format s
@@ -79,8 +95,8 @@ $ComplianceTaskXml = @"
     </Settings>
     <Actions Context="Author">
         <Exec>
-            <Command>powershell.exe</Command>
-            <Arguments>-ExecutionPolicy Bypass -NoProfile -NonInteractive -WindowStyle hidden -File $scriptsPath\$complianceScript</Arguments>
+            <Command>wscript.exe</Command>
+            <Arguments>$scriptsPath\$psRun $scriptsPath\$complianceScript</Arguments>
         </Exec>
     </Actions>
 </Task>
@@ -115,8 +131,8 @@ try {
     $trigger.Delay="PT3M" # 3 minutes
     $trigger.Id="Startup Trigger"
     $action = $Task.Actions.Create(0)
-    $action.Path = "powershell.exe"
-    $action.Arguments = " -ExecutionPolicy `"Bypass`" -NoProfile -NonInteractive -WindowStyle hidden -File `"$scriptsPath\$complianceNotificationScript`""
+    $action.Path = "wscript.exe"
+    $action.Arguments = "`"$scriptsPath\$psRun`" `"$scriptsPath\$complianceNotificationScript`""
     $taskFolder = $ShedService.GetFolder("\")
     $taskFolder.RegisterTaskDefinition("$client`_ComplianceNotification", $Task , 6, 'Users', $null, 4) | Out-Null
     Write-Host $script:tick -ForegroundColor Green
